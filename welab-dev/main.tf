@@ -1,9 +1,9 @@
 terraform {
   required_providers {
-	google = {
-	  source = "hashicorp/google"
-	  version = "3.51.0"
-	}
+    google = {
+      source  = "hashicorp/google"
+      version = "3.51.0"
+    }
   }
 }
 
@@ -37,6 +37,10 @@ module "google_kubernetes_cluster" {
   pods_ipv4_cidr_block       = module.google_networks.cluster_pods_ip_cidr_range
   services_ipv4_cidr_block   = module.google_networks.cluster_services_ip_cidr_range
   authorized_ipv4_cidr_block = "${module.bastion.ip}/32"
+  depends_on = [
+    module.bastion,
+    module.google_networks
+  ]
 }
 
 module "bastion" {
@@ -48,4 +52,5 @@ module "bastion" {
   bastion_name = "app-cluster"
   network_name = module.google_networks.network.name
   subnet_name  = module.google_networks.subnet.name
+  depends_on   = [module.google_networks]
 }

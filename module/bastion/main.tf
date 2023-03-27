@@ -58,7 +58,7 @@ resource "google_compute_instance" "bastion" {
   network_interface {
     subnetwork = var.subnet_name
 
-    
+
     access_config {
       // Not setting "nat_ip", use an ephemeral external IP.
       network_tier = "STANDARD"
