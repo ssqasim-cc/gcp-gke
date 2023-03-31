@@ -39,3 +39,39 @@ variable "service_account" {
   type        = string
   description = "The GCP service account"
 }
+
+variable "enable_monitoring" {
+  type    = bool
+  default = false
+}
+variable "enable_logging" {
+  type    = bool
+  default = false
+}
+
+variable "database_name" {
+  type        = string
+  description = "The name of the database to create."
+}
+
+variable "db_tier" {
+  type        = string
+  description = "The machine type to use for the instance."
+  default     = "db-custom-1-3840"
+}
+
+variable "multi_az" {
+  type        = bool
+  description = "Whether to create a multi-AZ instance."
+  default     = false
+}
+
+variable "root_password" {
+  type        = string
+  description = "The root password for the instance."
+}
+
+variable "instance_name" {
+  type        = string
+  description = "The name of the Cloud SQL MySQL instance."
+}

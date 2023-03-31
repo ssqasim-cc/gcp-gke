@@ -1,0 +1,50 @@
+apiVersion: getambassador.io/v3alpha1
+kind: Listener
+metadata:
+  generation: 1
+  name: edge-stack-listener-8080
+  namespace: ambassador
+spec:
+  hostBinding:
+    namespace:
+      from: ALL
+  port: 8080
+  protocol: HTTP
+  securityModel: XFP
+---
+apiVersion: getambassador.io/v3alpha1
+kind: Listener
+metadata:
+  generation: 1
+  name: edge-stack-listener-8443
+  namespace: ambassador
+spec:
+  hostBinding:
+    namespace:
+      from: ALL
+  port: 8443
+  protocol: HTTPS
+  securityModel: XFP
+---
+apiVersion: getambassador.io/v2
+kind: Host
+metadata:
+  generation: 2
+  name: ambassador
+  namespace: default
+spec:
+  acmeProvider:
+    authority: none
+  ambassador_id:
+  - --apiVersion-v3alpha1-only--default
+  hostname: '*'
+  requestPolicy:
+    insecure:
+      action: Route
+  selector:
+    matchLabels:
+      hostname: wildcard
+  tlsSecret: {}
+status:
+  state: Ready
+  tlsCertificateSource: None

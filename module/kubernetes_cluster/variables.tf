@@ -58,3 +58,11 @@ variable "master_ipv4_cidr_block" {
   type        = string
   description = "The /28 CIDR block to use for the master IPs"
 }
+variable "enable_monitoring" {
+  type    = bool
+  default = false
+}
+variable "enable_logging" {
+  type    = bool
+  default = false
+}

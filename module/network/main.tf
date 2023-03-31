@@ -14,13 +14,25 @@ resource "google_compute_network" "vpc" {
 }
 
 resource "google_compute_subnetwork" "subnet" {
-  name                     = local.subnet_name
+  name                     = "${var.project_id}-subnet"
   ip_cidr_range            = "10.10.0.0/16"
   region                   = var.region
   network                  = google_compute_network.vpc.name
   private_ip_google_access = true
 }
 
+resource "google_compute_network" "db_network" {
+  name                    = "${var.project_id}-db"
+  auto_create_subnetworks = "false"
+}
+
+resource "google_compute_subnetwork" "db_subnetwork" {
+  name                     = "${var.project_id}-db-subnet"
+  ip_cidr_range            = "10.10.100.0/24"
+  region                   = var.region
+  network                  = google_compute_network.db_network.self_link
+  private_ip_google_access = true
+}
 resource "google_compute_route" "egress_internet" {
   name             = "egress-internet"
   dest_range       = "0.0.0.0/0"
