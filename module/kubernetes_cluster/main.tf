@@ -15,8 +15,8 @@ resource "google_container_cluster" "app_cluster" {
   network    = var.network_name
   subnetwork = var.subnet_name
 
-  logging_service    = "logging.googleapis.com/kubernetes"
-  monitoring_service = "monitoring.googleapis.com/kubernetes"
+  logging_service    = var.enable_logging ? "logging.googleapis.com/kubernetes" : null
+  monitoring_service = var.enable_monitoring ? "monitoring.googleapis.com/kubernetes" : null
   maintenance_policy {
     daily_maintenance_window {
       start_time = "02:00"

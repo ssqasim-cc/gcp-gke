@@ -31,6 +31,8 @@ module "google_kubernetes_cluster" {
   region                     = var.region
   node_zones                 = var.cluster_node_zones
   service_account            = var.service_account
+  enable_monitoring          = var.enable_monitoring
+  enable_logging             = var.enable_logging
   network_name               = module.google_networks.network.name
   subnet_name                = module.google_networks.subnet.name
   master_ipv4_cidr_block     = module.google_networks.cluster_master_ip_cidr_range
@@ -53,4 +55,19 @@ module "bastion" {
   network_name = module.google_networks.network.name
   subnet_name  = module.google_networks.subnet.name
   depends_on   = [module.google_networks]
+}
+
+module "cloudsql" {
+  source = "../module/cloudsql"
+
+  project_id        = var.project_id
+  region            = var.region
+  availability_zone = var.main_zone
+  subnet_name       = module.google_networks.db_network.id
+  database_name     = var.database_name
+  db_tier           = var.db_tier
+  multi_az          = var.multi_az
+  root_password     = var.root_password
+  instance_name     = var.instance_name
+  depends_on        = [module.google_networks]
 }

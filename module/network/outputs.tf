@@ -22,3 +22,8 @@ output "cluster_services_ip_cidr_range" {
   value       = local.cluster_services_ip_cidr_range
   description = "The CIDR range to use for Kubernetes cluster services"
 }
+
+output "db_network" {
+  value       = google_compute_network.db_network
+  description = "The subnet of DB network"
+}
