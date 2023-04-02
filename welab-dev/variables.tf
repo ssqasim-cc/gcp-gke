@@ -75,17 +75,21 @@ variable "instance_name" {
   type        = string
   description = "The name of the Cloud SQL MySQL instance."
 }
-
-variable "bucket-name" {
-  type = string
-  description = "name of the bucket"
-}
-
 variable "location" {
-  type = string
+  type        = string
   description = "Location of the bucket"
 }
 variable "domain_name" {
-  type = string
+  type        = string
   description = "domain name for SSL cert"
+}
+
+variable "bucket_name" {
+  type        = string
+  description = "Provide the name of the Bucket"
+}
+
+variable "indexpage" {
+  type        = string
+  description = "Name of the Index HTML File with Extension Ex: Index.html Main.html"
 }

@@ -15,6 +15,15 @@ provider "google" {
   zone    = var.main_zone
 }
 
+
+provider "google-beta" {
+  credentials = file(var.credentials_file_path)
+
+  project = var.project_id
+  region  = var.region
+  zone    = var.main_zone
+}
+
 module "google_networks" {
   source = "../module/network"
 
@@ -73,15 +82,19 @@ module "cloudsql" {
 }
 
 
-module "s3" {
+module "s3_frontend" {
   source = "../module/s3"
 
-  bucket-name   = var.bucket_name
-  location      = var.location
-  }
+  bucket_name           = var.bucket_name
+  location              = var.location
+  indexpage             = var.indexpage
+  enable_static_website = true
+
+}
 
 module "CDN" {
-  source = "../module/cdn"
-  domain_name  = var.domain_name
-  bucket_name  = module.s3.bucket
+  source      = "../module/cdn"
+  domain_name = var.domain_name
+  bucket_name = module.s3_frontend.bucket.name
+  depends_on  = [module.s3_frontend]
 }

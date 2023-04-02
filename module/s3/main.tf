@@ -1,7 +1,13 @@
 resource "google_storage_bucket" "this" {
-  provider = google
-  name     = var.bucket-name
+  name     = var.bucket_name
   location = var.location
+  dynamic "website" {
+    for_each = var.enable_static_website ? [1] : []
+    content {
+      main_page_suffix = var.indexpage
+      not_found_page   = var.indexpage
+    }
+  }
 }
 
 # Make new objects public

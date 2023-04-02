@@ -7,3 +7,9 @@ output "kubectl_alias_command" {
   description = "Command that creates an alias for kubectl using Bastion as proxy. Bastion ssh tunnel must be running."
   value       = "alias kube='${module.bastion.kubectl_command}'"
 }
+
+output "external-ip" {
+  value       = module.CDN.external-ip.address
+  description = "The external IP for pointing DNS"
+}
+
