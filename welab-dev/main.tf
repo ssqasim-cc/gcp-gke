@@ -71,3 +71,17 @@ module "cloudsql" {
   instance_name     = var.instance_name
   depends_on        = [module.google_networks]
 }
+
+
+module "s3" {
+  source = "../module/s3"
+
+  bucket-name   = var.bucket_name
+  location      = var.location
+  }
+
+module "CDN" {
+  source = "../module/cdn"
+  domain_name  = var.domain_name
+  bucket_name  = module.s3.bucket
+}
