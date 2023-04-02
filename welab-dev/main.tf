@@ -63,7 +63,7 @@ module "cloudsql" {
   project_id        = var.project_id
   region            = var.region
   availability_zone = var.main_zone
-  subnet_name       = module.google_networks.db_network.id
+  subnet_name       = module.google_networks.link
   database_name     = var.database_name
   db_tier           = var.db_tier
   multi_az          = var.multi_az

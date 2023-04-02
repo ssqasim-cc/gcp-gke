@@ -6,6 +6,7 @@ locals {
   cluster_services_ip_cidr_range = "10.102.0.0/16"
 }
 
+
 resource "google_compute_network" "vpc" {
   name                            = local.network_name
   auto_create_subnetworks         = false
@@ -21,18 +22,27 @@ resource "google_compute_subnetwork" "subnet" {
   private_ip_google_access = true
 }
 
-resource "google_compute_network" "db_network" {
-  name                    = "${var.project_id}-db"
-  auto_create_subnetworks = "false"
+resource "google_compute_global_address" "private_ip_block" {
+  name         = "db-ip-block"
+  description  = "A block of private IP addresses that are accessible only from within the VPC."
+  purpose      = "VPC_PEERING"
+  address_type = "INTERNAL"
+  ip_version   = "IPV4"
+  # We don't specify a address range because Google will automatically assign one for us.
+  prefix_length = 24 #
+  network       = google_compute_network.vpc.self_link
 }
 
-resource "google_compute_subnetwork" "db_subnetwork" {
-  name                     = "${var.project_id}-db-subnet"
-  ip_cidr_range            = "10.10.100.0/24"
-  region                   = var.region
-  network                  = google_compute_network.db_network.self_link
-  private_ip_google_access = true
+# This enables private services access. This makes it possible for instances
+# within the VPC and Google services to communicate exclusively using internal
+# IP addresses. Details here:
+#   https://cloud.google.com/sql/docs/postgres/configure-private-services-access
+resource "google_service_networking_connection" "private_vpc_connection" {
+  network                 = google_compute_network.vpc.self_link
+  service                 = "servicenetworking.googleapis.com"
+  reserved_peering_ranges = [google_compute_global_address.private_ip_block.name]
 }
+
 resource "google_compute_route" "egress_internet" {
   name             = "egress-internet"
   dest_range       = "0.0.0.0/0"
